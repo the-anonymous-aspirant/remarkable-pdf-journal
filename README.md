@@ -1,2 +1,4 @@
 # remarkable_pdf_journal
-A version of the bullet journal but with week links and day-of-week info
+I move around quite a bit in my journals, so I created a journal with the goal of making navigation via hyperlinks easier.
+
+The html should adapt to the current year, so it can be used to produce a usable pdf whenever desired.
