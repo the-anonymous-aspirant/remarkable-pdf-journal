@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><span id="year-title"></span> Planner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+        }
+        
+        .page {
+            width: 210mm;
+            height: 297mm;
+            padding: 10mm 15mm;
+            page-break-after: always;
+            position: relative;
+            background: white;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .page:last-child {
+            page-break-after: auto;
+        }
+        
+        @media screen {
+            body {
+                background: #95a5a6;
+                padding: 20px;
+            }
+        }
+        
+        h1 {
+            font-family: 'Noto Sans', sans-serif;
+            font-size: 28pt;
+            font-weight: 500;
+            margin-bottom: 6mm;
+            color: #1a1a1a;
+            letter-spacing: 0;
+        }
+        
+        h2 {
+            font-family: 'Noto Sans', sans-serif;
+            font-size: 24pt;
+            font-weight: 500;
+            margin-bottom: 0;
+            color: #1a1a1a;
+            letter-spacing: 0;
+        }
+        
+        h3 {
+            font-family: 'Noto Sans', sans-serif;
+            font-weight: 400;
+        }
+        
+        .subtitle {
+            font-family: 'Noto Sans', sans-serif;
+            font-size: 14pt;
+            color: #666;
+            margin-bottom: 8mm;
+            font-weight: 400;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 15mm;
+            font-size: 10pt;
+        }
+        
+        .nav-links a {
+            color: #0066cc;
+            text-decoration: none;
+            padding: 4px 8px;
+            border-radius: 3px;
+            transition: background-color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            background-color: #ecf0f1;
+        }
+        
+        .index-section {
+            margin-bottom: 12px;
+        }
+        
+        .index-section h3 {
+            font-size: 13pt;
+            font-weight: bold;
+            margin-bottom: 7px;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 3px;
+        }
+        
+        .month-block {
+            margin-bottom: 2px;
+            padding: 3px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        
+        .month-block h4 {
+            font-size: 9pt;
+            margin-bottom: 2px;
+            color: #2c3e50;
+        }
+        
+        .month-block a {
+            font-weight: bold;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        
+        .week-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 5px;
+        }
+        
+        .week-links a {
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 7.5pt;
+            padding: 2px 4px;
+            background: white;
+            border-radius: 2px;
+            border: 1px solid #bdc3c7;
+            white-space: nowrap;
+        }
+        
+        .week-links a:hover {
+            background: #3498db;
+            color: white;
+        }
+        
+        .day-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 10mm;
+        }
+        
+        .day-grid a {
+            color: #1a5490;
+            text-decoration: none;
+            font-size: 9pt;
+            padding: 5px;
+            background: #f8f9fa;
+            border-radius: 3px;
+            text-align: center;
+        }
+        
+        .day-grid a:hover {
+            background: #1a5490;
+            color: white;
+        }
+        
+        .blank-links {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .blank-links a {
+            color: #1a5490;
+            text-decoration: none;
+            font-size: 10pt;
+            padding: 5px;
+            background: #f8f9fa;
+            border-radius: 3px;
+            display: inline-block;
+        }
+        
+        .blank-links a:hover {
+            background: #3498db;
+            color: white;
+        }
+        
+        @media print {
+            body {
+                margin: 0;
+            }
+            
+            .nav-links a {
+                color: #0066cc !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // Generate the planner content for the current year
+        const year = new Date().getFullYear();
+        document.getElementById('year-title').textContent = year;
+        
+        function getWeeksInYear(year) {
+            const weeks = [];
+            let date = new Date(year, 0, 1);
+            
+            // Find first Monday
+            while (date.getDay() !== 1) {
+                date.setDate(date.getDate() - 1);
+            }
+            
+            while (date.getFullYear() <= year) {
+                const weekStart = new Date(date);
+                const weekEnd = new Date(date);
+                weekEnd.setDate(weekEnd.getDate() + 6);
+                
+                const weekNum = getWeekNumber(weekStart);
+                
+                if (weekStart.getFullYear() > year) break;
+                
+                weeks.push({
+                    num: weekNum,
+                    start: new Date(weekStart),
+                    end: new Date(weekEnd)
+                });
+                
+                date.setDate(date.getDate() + 7);
+            }
+            
+            return weeks;
+        }
+        
+        function getWeekNumber(date) {
+            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            const dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        }
+        
+        function formatDate(date, format) {
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const monthsFull = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            const d = date.getDate();
+            const m = date.getMonth();
+            const y = date.getFullYear();
+            const dow = date.getDay();
+            
+            if (format === 'day-page') {
+                return `${days[dow]} ${d} ${months[m]}`;
+            } else if (format === 'day-short') {
+                return `${days[dow]} ${d}`;
+            } else if (format === 'full-date') {
+                return `${String(d).padStart(2, '0')}.${String(m + 1).padStart(2, '0')}.${y}`;
+            } else if (format === 'month-full') {
+                return monthsFull[m];
+            }
+            return date.toDateString();
+        }
+        
+        function dateId(date) {
+            return `date-${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        }
+        
+        // Generate navigation bar (reusable across all pages)
+        function navBar() {
+            return `
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <a href="#blank-1" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 1">①</a>
+                    <a href="#blank-2" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 2">②</a>
+                    <a href="#blank-3" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 3">③</a>
+                    <a href="#blank-4" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 4">④</a>
+                    <a href="#blank-5" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 5">⑤</a>
+                    <span style="color: #ccc;">│</span>
+                    <a href="#index" style="color: #1a5490; text-decoration: none; font-size: 18pt;" title="Back to Index">⌂</a>
+                </div>
+            `;
+        }
+        
+        // Generate page header (title + nav bar + separator)
+        function pageHeader(title) {
+            return `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0;">
+                <h2>${title}</h2>
+                ${navBar()}
+            </div>
+            <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 3mm 0;">
+            `;
+        }
+        
+        // Generate date link box
+        function dateLinkBox(date, text, highlighted = true) {
+            const style = highlighted 
+                ? 'color: #1a5490; text-decoration: none; font-size: 9pt; padding: 5px; background: #f8f9fa; border-radius: 3px; min-width: 60px; text-align: left; display: block;'
+                : 'color: #666; text-decoration: none; font-size: 9pt; padding: 5px; background: #fafafa; border-radius: 3px; min-width: 60px; text-align: left; display: block;';
+            return `<a href="#${dateId(date)}" style="${style}">${text}</a>`;
+        }
+        
+        // Generate HTML
+        let html = '';
+        
+        // Blank page at the start
+        html += `
+        <div class="page" id="blank-start">
+        </div>
+        `;
+        
+        // Index page
+        html += `
+        <div class="page" id="index">
+            ${pageHeader(year.toString())}
+            <div class="index-section">
+        `;
+        
+        const weeks = getWeeksInYear(year);
+        const weeksByMonth = {};
+        
+        for (let month = 1; month <= 12; month++) {
+            weeksByMonth[month] = [];
+        }
+        
+        weeks.forEach(week => {
+            // Add this week to all months it touches
+            for (let d = new Date(week.start); d <= week.end; d.setDate(d.getDate() + 1)) {
+                const date = new Date(d);
+                if (date.getFullYear() === year) {
+                    const month = date.getMonth() + 1;
+                    if (!weeksByMonth[month].some(w => w.num === week.num)) {
+                        weeksByMonth[month].push(week);
+                    }
+                }
+            }
+        });
+        
+        // Index: Months with dates
+        for (let month = 1; month <= 12; month++) {
+            const monthDate = new Date(year, month - 1, 1);
+            const monthName = formatDate(monthDate, 'month-full');
+            const daysInMonth = new Date(year, month, 0).getDate();
+            
+            html += `
+                <div class="month-block">
+                    <h4><a href="#month-${month}">${monthName}</a></h4>
+                    <div style="display: flex; gap: 3px; flex-wrap: wrap; margin-bottom: 0;">
+            `;
+            
+            // Show all dates in this month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(year, month - 1, day);
+                html += `<a href="#${dateId(date)}" style="color: #0066cc; text-decoration: none; font-size: 7.5pt; padding: 2px 3px; background: #f8f9fa; border-radius: 2px; min-width: 24px; text-align: center;">${day}</a>`;
+            }
+            
+            html += `
+                    </div>
+                </div>
+            `;
+        }
+        
+        html += `
+            </div>
+        </div>
+        `;
+        
+        // Generate pages organized by month → weeks → days
+        for (let month = 1; month <= 12; month++) {
+            const monthDate = new Date(year, month - 1, 1);
+            const monthName = formatDate(monthDate, 'month-full');
+            const daysInMonth = new Date(year, month, 0).getDate();
+            
+            // Month page
+            html += `
+            <div class="page" id="month-${month}">
+                ${pageHeader(monthName)}
+                <div style="display: flex; flex-direction: column; justify-content: space-evenly; height: calc(100% - 40mm);">
+            `;
+            
+            // Display weeks that include days from this month
+            const weeksInMonth = weeksByMonth[month];
+            weeksInMonth.forEach(week => {
+                html += `
+                <div style="margin-bottom: 0;">
+                    <h4 style="font-size: 11pt; margin-bottom: 5px;"><a href="#week-${week.num}" style="color: #3498db; text-decoration: none;">Week ${week.num}</a></h4>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap; justify-content: space-between;">
+                `;
+                
+                // Show all 7 days of the week
+                for (let d = new Date(week.start); d <= week.end; d.setDate(d.getDate() + 1)) {
+                    const date = new Date(d);
+                    const monthNum = date.getMonth() + 1;
+                    const dayNum = date.getDate();
+                    const isCurrentMonth = monthNum === month && date.getFullYear() === year;
+                    
+                    if (date.getFullYear() === year) {
+                        const bgColor = isCurrentMonth ? '#f8f9fa' : '#fafafa';
+                        const linkColor = isCurrentMonth ? '#1a5490' : '#999';
+                        html += `<div style="font-size: 9pt; padding: 4px 6px; background: ${bgColor}; border-radius: 3px; white-space: nowrap; flex: 1; text-align: center; font-weight: 600;">`;
+                        html += `<a href="#index" style="color: ${linkColor}; text-decoration: none;">${date.getFullYear()}</a>`;
+                        html += `<span style="color: #999;">-</span>`;
+                        html += `<a href="#month-${monthNum}" style="color: ${linkColor}; text-decoration: none;">${String(monthNum).padStart(2, '0')}</a>`;
+                        html += `<span style="color: #999;">-</span>`;
+                        html += `<a href="#${dateId(date)}" style="color: ${linkColor}; text-decoration: none;">${String(dayNum).padStart(2, '0')}</a>`;
+                        html += `</div>`;
+                    } else {
+                        html += `<span style="color: #ccc; font-size: 9pt; padding: 4px 6px; white-space: nowrap; flex: 1; text-align: center;">${date.getFullYear()}-${String(monthNum).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}</span>`;
+                    }
+                }
+                
+                html += `
+                    </div>
+                </div>
+                `;
+            });
+            
+            html += `
+                </div>
+            </div>
+            `;
+            
+            // Weeks in this month
+            weeksByMonth[month].forEach(week => {
+                const monthsInWeek = new Set();
+                const daysInWeek = [];
+                
+                for (let d = new Date(week.start); d <= week.end; d.setDate(d.getDate() + 1)) {
+                    const date = new Date(d);
+                    if (date.getFullYear() === year) {
+                        monthsInWeek.add(date.getMonth() + 1);
+                        daysInWeek.push(new Date(date));
+                    }
+                }
+                
+                html += `
+                <div class="page" id="week-${week.num}">
+                    ${pageHeader(`Week ${week.num}`)}
+                    <div style="display: flex; flex-direction: column; justify-content: space-evenly; height: calc(100% - 40mm);">
+                `;
+                
+                daysInWeek.forEach(date => {
+                    const weekNum = getWeekNumber(date);
+                    const monthNum = date.getMonth() + 1;
+                    const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
+                    
+                    html += `
+                    <div style="font-size: 10pt; display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; padding: 4px; background: #f8f9fa; border-radius: 3px; margin-bottom: 4px;">
+                        <div style="display: inline; font-weight: 600;">
+                            <a href="#index" style="color: #1a5490; text-decoration: none;">${date.getFullYear()}</a><span style="color: #999;">-</span><a href="#month-${monthNum}" style="color: #1a5490; text-decoration: none;">${String(monthNum).padStart(2, '0')}</a><span style="color: #999;">-</span><a href="#${dateId(date)}" style="color: #1a5490; text-decoration: none;">${String(date.getDate()).padStart(2, '0')}</a>
+                        </div>
+                        <a href="#${dateId(date)}" style="color: #1a5490; text-decoration: none; font-weight: 400;">${dayName}</a>
+                    </div>
+                    `;
+                });
+                
+                html += `
+                    </div>
+                </div>
+                `;
+                
+                // Days in this week - create pages for all days
+                daysInWeek.forEach(date => {
+                    const weekNum = getWeekNumber(date);
+                    const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
+                    const dayMonth = date.getMonth() + 1;
+                    
+                    html += `
+                    <div class="page" id="${dateId(date)}">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0;">
+                            <h2 style="font-size: 20pt; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;">
+                                <a href="#week-${weekNum}" style="color: #1a5490; text-decoration: none;">W${weekNum}</a>
+                                <div style="display: inline;">
+                                    <a href="#index" style="color: #1a5490; text-decoration: none;">${date.getFullYear()}</a><span style="color: #999;">-</span><a href="#month-${dayMonth}" style="color: #1a5490; text-decoration: none;">${String(dayMonth).padStart(2, '0')}</a><span style="color: #999;">-</span><a href="#${dateId(date)}" style="color: #1a5490; text-decoration: none;">${String(date.getDate()).padStart(2, '0')}</a>
+                                </div>
+                                <span style="color: #1a1a1a; font-weight: 400;">${dayName}</span>
+                            </h2>
+                            ${navBar()}
+                        </div>
+                        <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 3mm 0;">
+                    </div>
+                    `;
+                });
+            });
+        }
+        
+        // Blank pages at the end
+        const blankIcons = ['①', '②', '③', '④', '⑤'];
+        for (let i = 1; i <= 5; i++) {
+            html += `
+            <div class="page" id="blank-${i}">
+                ${pageHeader(blankIcons[i-1])}
+            </div>
+            `;
+        }
+        
+        document.body.innerHTML = html;
+    </script>
+</body>
+</html>
