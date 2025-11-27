@@ -288,6 +288,10 @@
                     <a href="#blank-3" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 3">③</a>
                     <a href="#blank-4" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 4">④</a>
                     <a href="#blank-5" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 5">⑤</a>
+                    <a href="#blank-6" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 6">⑥</a>
+                    <a href="#blank-7" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 7">⑦</a>
+                    <a href="#blank-8" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 8">⑧</a>
+                    <a href="#blank-9" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 9">⑨</a>
                     <span style="color: #ccc;">│</span>
                     <a href="#index" style="color: #1a5490; text-decoration: none; font-size: 18pt;" title="Back to Index">⌂</a>
                 </div>
@@ -385,9 +389,20 @@
             const daysInMonth = new Date(year, month, 0).getDate();
             
             // Month page
+            const prevMonth = month === 1 ? 12 : month - 1;
+            const nextMonth = month === 12 ? 1 : month + 1;
+            
             html += `
             <div class="page" id="month-${month}">
-                ${pageHeader(monthName)}
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0;">
+                    <h2 style="display: flex; align-items: center; gap: 10px;">
+                        <a href="#month-${prevMonth}" style="color: #1a5490; text-decoration: none; font-size: 18pt;">←</a>
+                        <span>${monthName}</span>
+                        <a href="#month-${nextMonth}" style="color: #1a5490; text-decoration: none; font-size: 18pt;">→</a>
+                    </h2>
+                    ${navBar()}
+                </div>
+                <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 3mm 0;">
                 <div style="display: flex; flex-direction: column; justify-content: space-evenly; height: calc(100% - 40mm);">
             `;
             
@@ -446,9 +461,20 @@
                     }
                 }
                 
+                const prevWeek = week.num === 1 ? weeks.length : week.num - 1;
+                const nextWeek = week.num === weeks.length ? 1 : week.num + 1;
+                
                 html += `
                 <div class="page" id="week-${week.num}">
-                    ${pageHeader(`Week ${week.num}`)}
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0;">
+                        <h2 style="display: flex; align-items: center; gap: 10px;">
+                            <a href="#week-${prevWeek}" style="color: #1a5490; text-decoration: none; font-size: 18pt;">←</a>
+                            <span>Week ${week.num}</span>
+                            <a href="#week-${nextWeek}" style="color: #1a5490; text-decoration: none; font-size: 18pt;">→</a>
+                        </h2>
+                        ${navBar()}
+                    </div>
+                    <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 3mm 0;">
                     <div style="display: flex; flex-direction: column; justify-content: space-evenly; height: calc(100% - 40mm);">
                 `;
                 
@@ -473,20 +499,28 @@
                 `;
                 
                 // Days in this week - create pages for all days
-                daysInWeek.forEach(date => {
+                daysInWeek.forEach((date, dayIndex) => {
                     const weekNum = getWeekNumber(date);
                     const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
                     const dayMonth = date.getMonth() + 1;
+                    
+                    // Calculate previous and next day
+                    const prevDate = new Date(date);
+                    prevDate.setDate(prevDate.getDate() - 1);
+                    const nextDate = new Date(date);
+                    nextDate.setDate(nextDate.getDate() + 1);
                     
                     html += `
                     <div class="page" id="${dateId(date)}">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0;">
                             <h2 style="font-size: 20pt; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;">
+                                <a href="#${dateId(prevDate)}" style="color: #1a5490; text-decoration: none; font-size: 18pt;">←</a>
                                 <a href="#week-${weekNum}" style="color: #1a5490; text-decoration: none;">W${weekNum}</a>
                                 <div style="display: inline;">
                                     <a href="#index" style="color: #1a5490; text-decoration: none;">${date.getFullYear()}</a><span style="color: #999;">-</span><a href="#month-${dayMonth}" style="color: #1a5490; text-decoration: none;">${String(dayMonth).padStart(2, '0')}</a><span style="color: #999;">-</span><a href="#${dateId(date)}" style="color: #1a5490; text-decoration: none;">${String(date.getDate()).padStart(2, '0')}</a>
                                 </div>
                                 <span style="color: #1a1a1a; font-weight: 400;">${dayName}</span>
+                                <a href="#${dateId(nextDate)}" style="color: #1a5490; text-decoration: none; font-size: 18pt;">→</a>
                             </h2>
                             ${navBar()}
                         </div>
@@ -498,8 +532,8 @@
         }
         
         // Blank pages at the end
-        const blankIcons = ['①', '②', '③', '④', '⑤'];
-        for (let i = 1; i <= 5; i++) {
+        const blankIcons = ['①', '②', '③', '④', '⑤', '⑥', '⑦', '⑧', '⑨'];
+        for (let i = 1; i <= 9; i++) {
             html += `
             <div class="page" id="blank-${i}">
                 ${pageHeader(blankIcons[i-1])}
