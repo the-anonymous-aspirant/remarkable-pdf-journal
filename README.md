@@ -2,3 +2,10 @@
 I move around quite a bit in my journals, so I created a journal with the goal of making navigation via hyperlinks easier.
 
 The html should adapt to the current year, so it can be used to produce a usable pdf whenever desired.
+
+## Usage
+Download the generate_planner.html.
+
+Open it in your web browser.
+
+Save as a pdf and upload it to your remarkable or e-ink device.
