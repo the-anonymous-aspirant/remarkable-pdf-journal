@@ -6,7 +6,7 @@
     <title>Planner</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         @page {
             size: A4;
@@ -20,7 +20,7 @@
         }
         
         body {
-            font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Crimson Pro', Georgia, serif;
             line-height: 1.6;
         }
         
@@ -49,7 +49,7 @@
         }
         
         h1 {
-            font-family: 'Noto Sans', sans-serif;
+            font-family: 'Crimson Pro', Georgia, serif;
             font-size: 28pt;
             font-weight: 500;
             margin-bottom: 6mm;
@@ -58,7 +58,7 @@
         }
         
         h2 {
-            font-family: 'Noto Sans', sans-serif;
+            font-family: 'Crimson Pro', Georgia, serif;
             font-size: 24pt;
             font-weight: 500;
             margin-bottom: 0;
@@ -67,12 +67,12 @@
         }
         
         h3 {
-            font-family: 'Noto Sans', sans-serif;
+            font-family: 'Crimson Pro', Georgia, serif;
             font-weight: 400;
         }
         
         .subtitle {
-            font-family: 'Noto Sans', sans-serif;
+            font-family: 'Crimson Pro', Georgia, serif;
             font-size: 14pt;
             color: #666;
             margin-bottom: 8mm;
@@ -209,17 +209,13 @@
 </head>
 <body>
     <script>
-        // Generate the planner content for the current year
-        const year = new Date().getFullYear();
-        
-        // Update the page title
+        const year = new Date().getFullYear() + 1;
         document.title = `${year} Planner`;
         
         function getWeeksInYear(year) {
             const weeks = [];
             let date = new Date(year, 0, 1);
             
-            // Find first Monday
             while (date.getDay() !== 1) {
                 date.setDate(date.getDate() - 1);
             }
@@ -279,26 +275,25 @@
             return `date-${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
         }
         
-        // Generate navigation bar (reusable across all pages)
         function navBar() {
             return `
                 <div style="display: flex; gap: 8px; align-items: center;">
-                    <a href="#blank-1" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 1">①</a>
-                    <a href="#blank-2" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 2">②</a>
-                    <a href="#blank-3" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 3">③</a>
-                    <a href="#blank-4" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 4">④</a>
-                    <a href="#blank-5" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 5">⑤</a>
-                    <a href="#blank-6" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 6">⑥</a>
-                    <a href="#blank-7" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 7">⑦</a>
-                    <a href="#blank-8" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 8">⑧</a>
-                    <a href="#blank-9" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 9">⑨</a>
+                    <a href="#blank-1" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 1">I</a>
+                    <a href="#blank-2" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 2">II</a>
+                    <a href="#blank-3" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 3">III</a>
+                    <a href="#blank-4" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 4">IV</a>
+                    <a href="#blank-5" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 5">V</a>
+                    <a href="#blank-6" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 6">VI</a>
+                    <a href="#blank-7" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 7">VII</a>
+                    <a href="#blank-8" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 8">VIII</a>
+                    <a href="#blank-9" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 9">IX</a>
+                    <a href="#blank-10" style="color: #1a5490; text-decoration: none; font-size: 14pt;" title="Blank Page 10">X</a>
                     <span style="color: #ccc;">│</span>
                     <a href="#index" style="color: #1a5490; text-decoration: none; font-size: 18pt;" title="Back to Index">⌂</a>
                 </div>
             `;
         }
         
-        // Generate page header (title + nav bar + separator)
         function pageHeader(title) {
             return `
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0;">
@@ -309,7 +304,6 @@
             `;
         }
         
-        // Generate date link box
         function dateLinkBox(date, text, highlighted = true) {
             const style = highlighted 
                 ? 'color: #1a5490; text-decoration: none; font-size: 9pt; padding: 5px; background: #f8f9fa; border-radius: 3px; min-width: 60px; text-align: left; display: block;'
@@ -317,16 +311,16 @@
             return `<a href="#${dateId(date)}" style="${style}">${text}</a>`;
         }
         
-        // Generate HTML
         let html = '';
         
-        // Blank page at the start
         html += `
-        <div class="page" id="blank-start">
+        <div class="page" id="cover" style="display: flex; align-items: center; justify-content: center; padding: 0;">
+            <img src="https://share.remarkable.com/api/shared-note/fCEZICDDK2GEVA/image/fCEZICDDK2GEVA-d214c278-cf84-4d28-a1df-2b2d10b2befa" 
+                 style="max-width: 100%; max-height: 100%; object-fit: contain;" 
+                 alt="Cover">
         </div>
         `;
         
-        // Index page
         html += `
         <div class="page" id="index">
             ${pageHeader(year.toString())}
@@ -341,7 +335,6 @@
         }
         
         weeks.forEach(week => {
-            // Add this week to all months it touches
             for (let d = new Date(week.start); d <= week.end; d.setDate(d.getDate() + 1)) {
                 const date = new Date(d);
                 if (date.getFullYear() === year) {
@@ -353,7 +346,6 @@
             }
         });
         
-        // Index: Months with dates
         for (let month = 1; month <= 12; month++) {
             const monthDate = new Date(year, month - 1, 1);
             const monthName = formatDate(monthDate, 'month-full');
@@ -365,7 +357,6 @@
                     <div style="display: flex; gap: 3px; flex-wrap: wrap; margin-bottom: 0;">
             `;
             
-            // Show all dates in this month
             for (let day = 1; day <= daysInMonth; day++) {
                 const date = new Date(year, month - 1, day);
                 html += `<a href="#${dateId(date)}" style="color: #0066cc; text-decoration: none; font-size: 7.5pt; padding: 2px 3px; background: #f8f9fa; border-radius: 2px; min-width: 24px; text-align: center;">${day}</a>`;
@@ -382,13 +373,99 @@
         </div>
         `;
         
-        // Generate pages organized by month → weeks → days
+        html += `
+        <div class="page" id="notes-index">
+            ${pageHeader('Bookmarks')}
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <a href="#blank-1" style="color: #1a5490; text-decoration: none; font-size: 16pt; font-weight: 500; min-width: 40px;">I</a>
+                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc; margin: 0;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <a href="#blank-2" style="color: #1a5490; text-decoration: none; font-size: 16pt; font-weight: 500; min-width: 40px;">II</a>
+                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc; margin: 0;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <a href="#blank-3" style="color: #1a5490; text-decoration: none; font-size: 16pt; font-weight: 500; min-width: 40px;">III</a>
+                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc; margin: 0;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <a href="#blank-4" style="color: #1a5490; text-decoration: none; font-size: 16pt; font-weight: 500; min-width: 40px;">IV</a>
+                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc; margin: 0;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <a href="#blank-5" style="color: #1a5490; text-decoration: none; font-size: 16pt; font-weight: 500; min-width: 40px;">V</a>
+                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc; margin: 0;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <a href="#blank-6" style="color: #1a5490; text-decoration: none; font-size: 16pt; font-weight: 500; min-width: 40px;">VI</a>
+                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc; margin: 0;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <a href="#blank-7" style="color: #1a5490; text-decoration: none; font-size: 16pt; font-weight: 500; min-width: 40px;">VII</a>
+                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc; margin: 0;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <a href="#blank-8" style="color: #1a5490; text-decoration: none; font-size: 16pt; font-weight: 500; min-width: 40px;">VIII</a>
+                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc; margin: 0;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <a href="#blank-9" style="color: #1a5490; text-decoration: none; font-size: 16pt; font-weight: 500; min-width: 40px;">IX</a>
+                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc; margin: 0;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <a href="#blank-10" style="color: #1a5490; text-decoration: none; font-size: 16pt; font-weight: 500; min-width: 40px;">X</a>
+                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc; margin: 0;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <a href="#blank-11" style="color: #1a5490; text-decoration: none; font-size: 16pt; font-weight: 500; min-width: 40px;">XI</a>
+                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc; margin: 0;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <a href="#blank-12" style="color: #1a5490; text-decoration: none; font-size: 16pt; font-weight: 500; min-width: 40px;">XII</a>
+                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc; margin: 0;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <a href="#blank-13" style="color: #1a5490; text-decoration: none; font-size: 16pt; font-weight: 500; min-width: 40px;">XIII</a>
+                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc; margin: 0;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <a href="#blank-14" style="color: #1a5490; text-decoration: none; font-size: 16pt; font-weight: 500; min-width: 40px;">XIV</a>
+                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc; margin: 0;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <a href="#blank-15" style="color: #1a5490; text-decoration: none; font-size: 16pt; font-weight: 500; min-width: 40px;">XV</a>
+                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc; margin: 0;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <a href="#blank-16" style="color: #1a5490; text-decoration: none; font-size: 16pt; font-weight: 500; min-width: 40px;">XVI</a>
+                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc; margin: 0;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <a href="#blank-17" style="color: #1a5490; text-decoration: none; font-size: 16pt; font-weight: 500; min-width: 40px;">XVII</a>
+                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc; margin: 0;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <a href="#blank-18" style="color: #1a5490; text-decoration: none; font-size: 16pt; font-weight: 500; min-width: 40px;">XVIII</a>
+                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc; margin: 0;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <a href="#blank-19" style="color: #1a5490; text-decoration: none; font-size: 16pt; font-weight: 500; min-width: 40px;">XIX</a>
+                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc; margin: 0;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <a href="#blank-20" style="color: #1a5490; text-decoration: none; font-size: 16pt; font-weight: 500; min-width: 40px;">XX</a>
+                    <hr style="flex: 1; border: none; border-top: 1px solid #ccc; margin: 0;">
+                </div>
+            </div>
+        </div>
+        `;
+        
         for (let month = 1; month <= 12; month++) {
             const monthDate = new Date(year, month - 1, 1);
             const monthName = formatDate(monthDate, 'month-full');
             const daysInMonth = new Date(year, month, 0).getDate();
             
-            // Month page
             const prevMonth = month === 1 ? 12 : month - 1;
             const nextMonth = month === 12 ? 1 : month + 1;
             
@@ -406,7 +483,6 @@
                 <div style="display: flex; flex-direction: column; justify-content: space-evenly; height: calc(100% - 40mm);">
             `;
             
-            // Display weeks that include days from this month
             const weeksInMonth = weeksByMonth[month];
             weeksInMonth.forEach(week => {
                 html += `
@@ -415,7 +491,6 @@
                     <div style="display: flex; gap: 6px; flex-wrap: wrap; justify-content: space-between;">
                 `;
                 
-                // Show all 7 days of the week
                 for (let d = new Date(week.start); d <= week.end; d.setDate(d.getDate() + 1)) {
                     const date = new Date(d);
                     const monthNum = date.getMonth() + 1;
@@ -448,7 +523,6 @@
             </div>
             `;
             
-            // Weeks in this month
             weeksByMonth[month].forEach(week => {
                 const monthsInWeek = new Set();
                 const daysInWeek = [];
@@ -498,13 +572,11 @@
                 </div>
                 `;
                 
-                // Days in this week - create pages for all days
                 daysInWeek.forEach((date, dayIndex) => {
                     const weekNum = getWeekNumber(date);
                     const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
                     const dayMonth = date.getMonth() + 1;
                     
-                    // Calculate previous and next day
                     const prevDate = new Date(date);
                     prevDate.setDate(prevDate.getDate() - 1);
                     const nextDate = new Date(date);
@@ -531,15 +603,23 @@
             });
         }
         
-        // Blank pages at the end
-        const blankIcons = ['①', '②', '③', '④', '⑤', '⑥', '⑦', '⑧', '⑨'];
-        for (let i = 1; i <= 9; i++) {
+        const blankIcons = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX'];
+        for (let i = 1; i <= 20; i++) {
             html += `
             <div class="page" id="blank-${i}">
                 ${pageHeader(blankIcons[i-1])}
             </div>
             `;
         }
+        
+        html += `
+        <div class="page" id="end-page" style="display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 20mm;">
+            <div style="text-align: center; color: #666; font-size: 10pt;">
+                <p style="margin-bottom: 5px;">Created by</p>
+                <a href="https://github.com/the-anonymous-aspirant" style="color: #1a5490; text-decoration: none; font-weight: 500;">github.com/the-anonymous-aspirant</a>
+            </div>
+        </div>
+        `;
         
         document.body.innerHTML = html;
     </script>
